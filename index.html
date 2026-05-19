@@ -498,13 +498,25 @@ body{
 
 </div>
 
+<!-- =========================
+추가/수정된 전체 SCRIPT 부분만 교체
+기존 <script> ~ </script> 전체를 이걸로 바꿔
+========================= -->
+
 <script>
+
 const fireSound = document.getElementById("fireSound");
 const walkSound = document.getElementById("walkSound");
 
+const badMusic = document.getElementById("badMusic");
+const goodMusic = document.getElementById("goodMusic");
+
+/* =========================
+불타는 소리 자연 반복
+========================= */
+
 fireSound.addEventListener("timeupdate", () => {
 
-    // 끝나기 0.2초 전에 처음으로 이동
     if(fireSound.currentTime > fireSound.duration - 3){
 
         fireSound.currentTime = 0;
@@ -514,8 +526,9 @@ fireSound.addEventListener("timeupdate", () => {
 
 });
 
-const badMusic = document.getElementById("badMusic");
-const goodMusic = document.getElementById("goodMusic");
+/* =========================
+요소
+========================= */
 
 const startScene = document.getElementById("startScene");
 const walkScene = document.getElementById("walkScene");
@@ -528,46 +541,73 @@ const dialogueText = document.getElementById("dialogueText");
 const phoneScene = document.getElementById("phoneScene");
 const appScene = document.getElementById("appScene");
 
+const detailScene = document.getElementById("detailScene");
+const detailContent = document.getElementById("detailContent");
+
+const endingScene = document.getElementById("endingScene");
+const endingText = document.getElementById("endingText");
+
 darkOverlay.style.display = "none";
 
+/* =========================
+대사
+========================= */
+
 const dialogues = [
+
 "뭐야...? 우리 집이 불타고 있잖아?!",
+
 "잠깐만... 지금 당장 잘 곳부터 구해야 해...",
+
 "보증금도 얼마 없는데 어떡하지...?",
+
 "일단 직방부터 켜보자..."
+
 ];
 
 let current = 0;
 
-/* 시작 */
+/* =========================
+서명 여부
+========================= */
+
+let signed = false;
+
+/* =========================
+게임 시작
+========================= */
+
 startScene.addEventListener("click", ()=>{
 
     startScene.style.display = "none";
 
     walkScene.style.display = "flex";
 
-    walkSound.volume = 0.99;
+    /* 걷는 소리 */
+    walkSound.volume = 0.9;
     walkSound.play();
 
-    /* 멀리서 들리는 불타는 소리 */
+    /* 멀리서 들리는 불소리 */
     fireSound.volume = 0.05;
     fireSound.play();
 
     setTimeout(()=>{
 
-    walkScene.style.display = "none";
+        walkScene.style.display = "none";
 
-    walkSound.pause();
+        walkSound.pause();
 
-    fireSound.volume = 0.3;
-    fireSound.play();
+        /* 가까워지며 불소리 커짐 */
+        fireSound.volume = 0.35;
 
         fireScene.style.opacity = "1";
 
         darkOverlay.style.display = "block";
 
         setTimeout(()=>{
+
             darkOverlay.style.opacity = "0";
+
         },100);
 
     },3000);
@@ -575,13 +615,17 @@ startScene.addEventListener("click", ()=>{
     setTimeout(()=>{
 
         dialogueBox.style.display = "block";
+
         dialogueText.innerText = dialogues[current];
 
     },6500);
 
 });
 
-/* 대사 */
+/* =========================
+대사 넘기기
+========================= */
+
 dialogueBox.addEventListener("click", ()=>{
 
     current++;
@@ -598,33 +642,40 @@ dialogueBox.addEventListener("click", ()=>{
 
         setTimeout(()=>{
 
-        appScene.style.display = "block";
+            appScene.style.display = "block";
 
-        // 불타는 소리 멈춤
-        fireSound.pause();
-        fireSound.currentTime = 0;
+            /* 앱 들어가면 효과음 종료 */
 
-        dialogueBox.style.display = "block";
+            fireSound.pause();
+            fireSound.currentTime = 0;
 
-        dialogueText.innerText =
-        "매물이 두 개밖에 없네... 난 가진 돈도 얼마 없는데... 어떻게 해야 하지...?";
+            walkSound.pause();
+            walkSound.currentTime = 0;
 
-      },2500);
+            dialogueBox.style.display = "block";
+
+            dialogueText.innerText =
+            "매물이 두 개밖에 없네... 난 가진 돈도 얼마 없는데... 어떻게 해야 하지...?";
+
+        },2500);
 
     }
 
 });
 
-/* 자유 탐색 */
+/* =========================
+앱 자유 탐색
+========================= */
+
 appScene.addEventListener("click", ()=>{
 
     dialogueBox.style.display = "none";
 
 });
 
-/* 상세 */
-const detailScene = document.getElementById("detailScene");
-const detailContent = document.getElementById("detailContent");
+/* =========================
+매물 열기
+========================= */
 
 function openRoom(type){
 
@@ -649,13 +700,14 @@ detailContent.innerHTML = `
 <p>
 계약 전
 <span class="term"
-data-tip="건물의 실제 소유자와 대출 여부를 확인할 수 있는 서류">
+data-tip="건물 실제 소유자와 대출 여부를 확인하는 서류">
 등기부등본
 </span>
 확인이 필요하다고 적혀 있었다.
 </p>
 
-<button class="scheduleBtn" onclick="showContract(1)">
+<button class="scheduleBtn"
+onclick="showContract(1)">
 일정 잡기
 </button>
 
@@ -694,7 +746,8 @@ data-tip="보증금을 우선적으로 돌려받을 권리">
 설명이 포함되어 있었다.
 </p>
 
-<button class="scheduleBtn" onclick="showContract(2)">
+<button class="scheduleBtn"
+onclick="showContract(2)">
 일정 잡기
 </button>
 
@@ -706,12 +759,23 @@ data-tip="보증금을 우선적으로 돌려받을 권리">
 
 }
 
+/* =========================
+뒤로가기
+========================= */
+
 function closeDetail(){
+
 detailScene.style.display = "none";
+
 }
 
-/* 계약서 */
+/* =========================
+계약서
+========================= */
+
 function showContract(type){
+
+signed = false;
 
 if(type === 1){
 
@@ -724,13 +788,16 @@ detailContent.innerHTML = `
 <div class="contractPaper">
 
 <p>임대인 성명 : 김○○</p>
+
 <p>임차인 성명 : 민지</p>
+
 <p>소재지 : 서울특별시 ○○구 ○○로</p>
+
 <p>계약 형태 : 전세</p>
 
 <p>
 <span class="term"
-data-tip="세입자가 집주인에게 맡기는 큰 금액">
+data-tip="세입자가 맡기는 큰 금액">
 보증금
 </span>
 : 5,000,000원
@@ -748,7 +815,7 @@ data-tip="건물에 잡혀있는 대출 기록">
 
 <p>
 <span class="term"
-data-tip="건물 실제 소유자와 대출 여부 확인 서류">
+data-tip="건물 소유자와 대출 여부 확인 서류">
 등기부등본
 </span>
 추후 확인 예정
@@ -778,7 +845,7 @@ onclick="signContract(this)">
 </div>
 
 <button class="scheduleBtn"
-onclick="badEnding()">
+onclick="checkContract(1)">
 계약 완료
 </button>
 
@@ -803,13 +870,16 @@ detailContent.innerHTML = `
 <div class="contractPaper">
 
 <p>임대인 성명 : 박○○</p>
+
 <p>임차인 성명 : 민지</p>
+
 <p>소재지 : 서울특별시 ○○구 ○○동</p>
+
 <p>계약 형태 : 월세</p>
 
 <p>
 <span class="term"
-data-tip="세입자가 집주인에게 맡기는 큰 금액">
+data-tip="세입자가 맡기는 큰 금액">
 보증금
 </span>
 : 10,000,000원
@@ -858,7 +928,7 @@ onclick="signContract(this)">
 </div>
 
 <button class="scheduleBtn"
-onclick="goodEnding()">
+onclick="checkContract(2)">
 계약 완료
 </button>
 
@@ -876,17 +946,49 @@ onclick="closeDetail()">
 
 }
 
-/* 서명 */
+/* =========================
+서명
+========================= */
+
 function signContract(el){
 
-el.innerText = "민지";
-el.classList.add("signed");
+    el.innerText = "민지";
+
+    el.classList.add("signed");
+
+    signed = true;
 
 }
 
-/* 엔딩 */
-const endingScene = document.getElementById("endingScene");
-const endingText = document.getElementById("endingText");
+/* =========================
+서명 체크
+========================= */
+
+function checkContract(type){
+
+    if(!signed){
+
+        alert("계약 전 서명이 필요합니다.");
+
+        return;
+
+    }
+
+    if(type === 1){
+
+        badEnding();
+
+    }else{
+
+        goodEnding();
+
+    }
+
+}
+
+/* =========================
+실패 엔딩
+========================= */
 
 function badEnding(){
 
@@ -922,18 +1024,22 @@ endingText.innerHTML = `
 
 <div class="endingTip">
 
-<div>⚠ 시세보다 지나치게 저렴한 매물 주의</div>
 <div>⚠ 계약 전 등기부등본 확인하기</div>
-<div>⚠ 계약 당일 전액 입금 요구 주의</div>
 <div>⚠ 특약사항 꼼꼼히 읽기</div>
+<div>⚠ 계약 당일 전액 입금 요구 주의</div>
 <div>⚠ 집주인 연락처 확인하기</div>
 <div>⚠ 모르는 용어 그냥 넘기지 않기</div>
+<div>⚠ 계약은 급할수록 천천히 보기</div>
 
 </div>
 
 `;
 
 }
+
+/* =========================
+성공 엔딩
+========================= */
 
 function goodEnding(){
 
@@ -960,8 +1066,6 @@ class="endingImage">
 민지는 ‘확인하는 습관’의 중요성을 배우게 되었다.
 
 <br><br>
-
-새로운 방 안에서 민지는 조용히 생각했다.
 
 “이제 진짜 어른이 되어가는 것 같아.”
 
