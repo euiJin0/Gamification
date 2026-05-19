@@ -246,6 +246,7 @@ body{
     color:white;
     font-size:24px;
     cursor:pointer;
+    margin-right:10px;
 }
 
 .contractPaper{
@@ -253,6 +254,7 @@ body{
     padding:35px;
     border:2px solid #ddd;
     border-radius:20px;
+    background:#fffef8;
 }
 
 /* 단어 설명 */
@@ -266,7 +268,7 @@ body{
 .term:hover::after{
     content:attr(data-tip);
     position:absolute;
-    top:-70px;
+    top:-80px;
     left:0;
     width:320px;
     background:black;
@@ -274,116 +276,224 @@ body{
     padding:12px;
     border-radius:10px;
     font-size:16px;
+    z-index:999;
+}
+
+/* 서명 */
+.fakeSign{
+    color:red;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:28px;
+}
+
+.signed{
+    color:black;
+    font-family:cursive;
+    font-size:32px;
 }
 
 /* 엔딩 */
+/* =========================
+엔딩 화면 수정
+기존 #endingScene, #endingText 부분 교체
+========================= */
+
+/* =========================
+엔딩 화면 전체 교체
+스크롤 없이 한 화면에 보이게
+========================= */
+
+/* =========================
+엔딩 화면 완전 수정
+진짜 화면 꽉 차게
+========================= */
+
 #endingScene{
-    width:100%;
-    height:100%;
-    background:black;
+    width:100vw;
+    height:100vh;
+
+    background:rgba(0,0,0,0.96);
+
     position:absolute;
+    inset:0;
+
     display:none;
+
     justify-content:center;
     align-items:center;
-    padding:80px;
-    z-index:500;
+
+    z-index:999;
+
+    overflow:hidden;
+
+    padding:10px;
 }
 
 #endingText{
+
+    width:98vw;
+    height:96vh;
+
+    background:#111;
+
+    border-radius:25px;
+
+    padding:20px 35px;
+
     color:white;
-    font-size:40px;
-    line-height:1.8;
-    text-align:center;
-    max-width:1200px;
+
+    overflow:hidden;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+
+    box-shadow:0 0 40px rgba(0,0,0,0.5);
 }
+
+/* 엔딩 이미지 */
+
+.endingImage{
+    width:100%;
+    height:240px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+
+    margin-bottom:15px;
+}
+
+/* 엔딩 본문 */
+
+.endingMain{
+    font-size:22px;
+    line-height:1.55;
+
+    margin-bottom:15px;
+}
+
+/* 팁 부분 */
+
+.endingTip{
+
+    margin-top:10px;
+
+    color:#ffd166;
+
+    font-size:20px;
+
+    line-height:1.5;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px 40px;
+}
+
 </style>
 </head>
 <body>
 
+  <!-- 불타는 소리 -->
+<audio id="fireSound" loop>
+    <source src="fire.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 걷는 소리 -->
+<audio id="walkSound" loop>
+    <source src="walk.mp3" type="audio/mpeg">
+</audio>
+
 <div id="game">
 
-    <!-- 시작 -->
-    <div id="startScene"></div>
+<!-- 시작 -->
+<div id="startScene"></div>
 
-    <!-- 걷기 -->
-    <div id="walkScene">
-        <div class="walkText">(터벅... 터벅...)</div>
-    </div>
+<!-- 걷기 -->
+<div id="walkScene">
+    <div class="walkText">(터벅... 터벅...)</div>
+</div>
 
-    <!-- 불타는 집 -->
-    <div id="fireScene"></div>
+<!-- 불타는 집 -->
+<div id="fireScene"></div>
 
-    <div id="darkOverlay"></div>
+<div id="darkOverlay"></div>
 
-    <!-- 대사 -->
-    <div id="dialogueBox">
-        <div id="speaker">민지</div>
-        <div id="dialogueText"></div>
-        <div id="next">▶▶</div>
-    </div>
+<!-- 대사 -->
+<div id="dialogueBox">
+    <div id="speaker">민지</div>
+    <div id="dialogueText"></div>
+    <div id="next">▶▶</div>
+</div>
 
-    <!-- 휴대폰 -->
-    <div id="phoneScene">
-        <img src="직방키기.png">
-    </div>
+<!-- 휴대폰 -->
+<div id="phoneScene">
+    <img src="직방키기.png">
+</div>
 
-    <!-- 직방 앱 -->
-    <div id="appScene">
+<!-- 앱 -->
+<div id="appScene">
 
-        <div id="header">직방</div>
+    <div id="header">직방</div>
 
-        <div id="roomContainer">
+    <div id="roomContainer">
 
-            <!-- 매물1 -->
-            <div class="roomCard" onclick="openRoom(1)">
+        <!-- 매물1 -->
+        <div class="roomCard" onclick="openRoom(1)">
 
-                <div class="roomImg"
-                style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop');">
-                </div>
-
-                <div class="roomInfo">
-                    <h2>신축 오피스텔</h2>
-                    <p>전세 500만원</p>
-                    <p>관리비 별도</p>
-                    <p>즉시 입주 가능</p>
-                </div>
-
+            <div class="roomImg"
+            style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop');">
             </div>
 
-            <!-- 매물2 -->
-            <div class="roomCard" onclick="openRoom(2)">
+            <div class="roomInfo">
+                <h2>신축 오피스텔</h2>
+                <p>전세 500만원</p>
+                <p>관리비 별도</p>
+                <p>즉시 입주 가능</p>
+            </div>
 
-                <div class="roomImg"
-                style="background-image:url('https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop');">
-                </div>
+        </div>
 
-                <div class="roomInfo">
-                    <h2>역세권 원룸</h2>
-                    <p>보증금 1000 / 월세 45</p>
-                    <p>관리비 8만원</p>
-                    <p>전입신고 가능</p>
-                </div>
+        <!-- 매물2 -->
+        <div class="roomCard" onclick="openRoom(2)">
 
+            <div class="roomImg"
+            style="background-image:url('https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop');">
+            </div>
+
+            <div class="roomInfo">
+                <h2>역세권 원룸</h2>
+                <p>보증금 1000 / 월세 45</p>
+                <p>관리비 8만원</p>
+                <p>전입신고 가능</p>
             </div>
 
         </div>
 
     </div>
 
-    <!-- 상세 -->
-    <div id="detailScene">
-        <button class="backBtn" onclick="closeDetail()">← 돌아가기</button>
-        <div id="detailContent"></div>
-    </div>
+</div>
 
-    <!-- 엔딩 -->
-    <div id="endingScene">
-        <div id="endingText"></div>
-    </div>
+<!-- 상세 -->
+<div id="detailScene">
+    <button class="backBtn" onclick="closeDetail()">← 돌아가기</button>
+    <div id="detailContent"></div>
+</div>
+
+<!-- 엔딩 -->
+<div id="endingScene">
+    <div id="endingText"></div>
+</div>
 
 </div>
 
 <script>
+const fireSound = document.getElementById("fireSound");
+const walkSound = document.getElementById("walkSound");
+
 const startScene = document.getElementById("startScene");
 const walkScene = document.getElementById("walkScene");
 const fireScene = document.getElementById("fireScene");
@@ -413,9 +523,21 @@ startScene.addEventListener("click", ()=>{
 
     walkScene.style.display = "flex";
 
+    walkSound.volume = 0.5;
+    walkSound.play();
+
+    /* 멀리서 들리는 불타는 소리 */
+    fireSound.volume = 0.15;
+    fireSound.play();
+
     setTimeout(()=>{
 
-        walkScene.style.display = "none";
+    walkScene.style.display = "none";
+
+    walkSound.pause();
+
+    fireSound.volume = 0.45;
+    fireSound.play();
 
         fireScene.style.opacity = "1";
 
@@ -436,7 +558,7 @@ startScene.addEventListener("click", ()=>{
 
 });
 
-/* 대사 넘기기 */
+/* 대사 */
 dialogueBox.addEventListener("click", ()=>{
 
     current++;
@@ -453,20 +575,24 @@ dialogueBox.addEventListener("click", ()=>{
 
         setTimeout(()=>{
 
-            appScene.style.display = "block";
+        appScene.style.display = "block";
 
-            dialogueBox.style.display = "block";
+        // 불타는 소리 멈춤
+        fireSound.pause();
+        fireSound.currentTime = 0;
 
-            dialogueText.innerText =
-            "매물이 두 개밖에 없네... 난 가진 돈도 얼마 없는데... 어떻게 해야 하지...?";
+        dialogueBox.style.display = "block";
 
-        },2500);
+        dialogueText.innerText =
+        "매물이 두 개밖에 없네... 난 가진 돈도 얼마 없는데... 어떻게 해야 하지...?";
+
+      },2500);
 
     }
 
 });
 
-/* 앱 자유롭게 보기 */
+/* 자유 탐색 */
 appScene.addEventListener("click", ()=>{
 
     dialogueBox.style.display = "none";
@@ -494,8 +620,7 @@ detailContent.innerHTML = `
 </p>
 
 <p>
-전세금은 500만원.
-시세보다 저렴해 보였다.
+전세금은 500만원이었다.
 </p>
 
 <p>
@@ -535,7 +660,7 @@ detailContent.innerHTML = `
 <p>
 계약 전
 <span class="term"
-data-tip="세입자가 해당 주소에 실제 거주한다고 등록하는 절차">
+data-tip="세입자가 실제 거주한다고 신고하는 절차">
 전입신고
 </span>
 가능 여부와
@@ -571,39 +696,67 @@ detailContent.innerHTML = `
 
 <div class="detailCard">
 
-<h1>임대차 계약서</h1>
+<h1>주택 임대차 계약서</h1>
 
 <div class="contractPaper">
+
+<p>임대인 성명 : 김○○</p>
+<p>임차인 성명 : 민지</p>
+<p>소재지 : 서울특별시 ○○구 ○○로</p>
+<p>계약 형태 : 전세</p>
 
 <p>
 <span class="term"
 data-tip="세입자가 집주인에게 맡기는 큰 금액">
 보증금
 </span>
-: 500만원
+: 5,000,000원
+</p>
+
+<p>계약 기간 : 2026.05 ~ 2028.05</p>
+
+<p>
+<span class="term"
+data-tip="건물에 잡혀있는 대출 기록">
+근저당
+</span>
+설정 있음
 </p>
 
 <p>
-월세 없음
+<span class="term"
+data-tip="건물 실제 소유자와 대출 여부 확인 서류">
+등기부등본
+</span>
+추후 확인 예정
 </p>
 
-<p>
-건물 담보 대출 있음
-</p>
+<p>계약 당일 전액 입금 요청</p>
+
+<p>임대인 연락처 추후 제공 예정</p>
 
 <p>
-계약 당일 전액 입금 요청
+특약사항 :
+계약 이후 발생하는 문제에 대해 임대인은 책임지지 않는다.
 </p>
 
+<br><br>
+
+<p>임대인 서명 : 김○○ (인)</p>
+
 <p>
-집주인 연락처 추후 제공
+임차인 서명 :
+<span class="fakeSign"
+onclick="signContract(this)">
+(인)
+</span>
 </p>
 
 </div>
 
 <button class="scheduleBtn"
 onclick="badEnding()">
-계약하기
+계약 완료
 </button>
 
 <button class="scheduleBtn"
@@ -622,21 +775,28 @@ detailContent.innerHTML = `
 
 <div class="detailCard">
 
-<h1>임대차 계약서</h1>
+<h1>주택 임대차 계약서</h1>
 
 <div class="contractPaper">
+
+<p>임대인 성명 : 박○○</p>
+<p>임차인 성명 : 민지</p>
+<p>소재지 : 서울특별시 ○○구 ○○동</p>
+<p>계약 형태 : 월세</p>
 
 <p>
 <span class="term"
 data-tip="세입자가 집주인에게 맡기는 큰 금액">
 보증금
 </span>
-: 1000만원
+: 10,000,000원
 </p>
 
-<p>
-월세 : 45만원
-</p>
+<p>월세 : 450,000원</p>
+
+<p>관리비 : 80,000원</p>
+
+<p>계약 기간 : 2026.05 ~ 2028.05</p>
 
 <p>
 <span class="term"
@@ -655,14 +815,28 @@ data-tip="보증금을 우선적으로 돌려받을 권리">
 </p>
 
 <p>
-관리비 포함 항목 명시
+특약사항 :
+도배 및 장판 상태 확인 완료.
+계약 종료 후 보증금 반환 조항 명시.
+</p>
+
+<br><br>
+
+<p>임대인 서명 : 박○○ (인)</p>
+
+<p>
+임차인 서명 :
+<span class="fakeSign"
+onclick="signContract(this)">
+(인)
+</span>
 </p>
 
 </div>
 
 <button class="scheduleBtn"
 onclick="goodEnding()">
-계약하기
+계약 완료
 </button>
 
 <button class="scheduleBtn"
@@ -679,6 +853,14 @@ onclick="closeDetail()">
 
 }
 
+/* 서명 */
+function signContract(el){
+
+el.innerText = "민지";
+el.classList.add("signed");
+
+}
+
 /* 엔딩 */
 const endingScene = document.getElementById("endingScene");
 const endingText = document.getElementById("endingText");
@@ -689,18 +871,39 @@ endingScene.style.display = "flex";
 
 endingText.innerHTML = `
 
+<img src="불타는집.jpg" class="endingImage">
+
+<div class="endingMain">
+
 계약 후 며칠 뒤.
 
 민지는 집주인에게 연락을 시도했지만
 전화는 이미 없는 번호였다.
 
-뒤늦게 확인한 결과,
-해당 건물은 대출 문제가 있었고
-민지는 보증금을 돌려받지 못했다.
+뒤늦게 등기부등본을 확인해보니
+건물에는 이미 과도한 대출이 잡혀 있었다.
+
+민지는 결국 보증금을 돌려받지 못했고,
+갑작스럽게 지낼 곳까지 잃게 되었다.
 
 <br><br>
 
-- 연락두절 엔딩 -
+“그때 계약서를 조금만 더 자세히 읽어봤더라면...”
+
+</div>
+
+<hr style="margin:12px 0;">
+
+<div class="endingTip">
+
+<div>⚠ 시세보다 지나치게 저렴한 매물 주의</div>
+<div>⚠ 계약 전 등기부등본 확인하기</div>
+<div>⚠ 계약 당일 전액 입금 요구 주의</div>
+<div>⚠ 특약사항 꼼꼼히 읽기</div>
+<div>⚠ 집주인 연락처 확인하기</div>
+<div>⚠ 모르는 용어 그냥 넘기지 않기</div>
+
+</div>
 
 `;
 
@@ -712,22 +915,46 @@ endingScene.style.display = "flex";
 
 endingText.innerHTML = `
 
+<img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop"
+class="endingImage">
+
+<div class="endingMain">
+
 민지는 계약 전 내용을 꼼꼼히 확인했다.
 
-전입신고와 확정일자까지 완료한 후
+등기부등본과 계약서를 읽고,
+전입신고와 확정일자까지 완료한 뒤
 안전하게 새로운 집으로 이사할 수 있었다.
 
 처음엔 어렵고 낯설었지만,
 이번 경험을 통해
-계약 전 확인의 중요성을 배우게 되었다.
+민지는 ‘확인하는 습관’의 중요성을 배우게 되었다.
 
 <br><br>
 
-- 새로운 시작 엔딩 -
+새로운 방 안에서 민지는 조용히 생각했다.
+
+“이제 진짜 어른이 되어가는 것 같아.”
+
+</div>
+
+<hr style="margin:12px 0;">
+
+<div class="endingTip">
+
+<div>✔ 계약 전 등기부등본 확인하기</div>
+<div>✔ 전입신고와 확정일자 받기</div>
+<div>✔ 특약사항 꼼꼼히 읽기</div>
+<div>✔ 관리비 포함 항목 확인하기</div>
+<div>✔ 모르는 용어는 꼭 찾아보기</div>
+<div>✔ 계약은 급할수록 천천히 보기</div>
+
+</div>
 
 `;
 
 }
+
 </script>
 
 </body>
