@@ -398,13 +398,21 @@ body{
 <body>
 
   <!-- 불타는 소리 -->
-<audio id="fireSound" loop>
+<audio id="fireSound">
     <source src="fire.mp3" type="audio/mpeg">
 </audio>
 
 <!-- 걷는 소리 -->
 <audio id="walkSound" loop>
     <source src="walk.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="badMusic">
+    <source src="badEnding.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="goodMusic">
+    <source src="goodEnding.mp3" type="audio/mpeg">
 </audio>
 
 <div id="game">
@@ -494,6 +502,21 @@ body{
 const fireSound = document.getElementById("fireSound");
 const walkSound = document.getElementById("walkSound");
 
+fireSound.addEventListener("timeupdate", () => {
+
+    // 끝나기 0.2초 전에 처음으로 이동
+    if(fireSound.currentTime > fireSound.duration - 3){
+
+        fireSound.currentTime = 0;
+        fireSound.play();
+
+    }
+
+});
+
+const badMusic = document.getElementById("badMusic");
+const goodMusic = document.getElementById("goodMusic");
+
 const startScene = document.getElementById("startScene");
 const walkScene = document.getElementById("walkScene");
 const fireScene = document.getElementById("fireScene");
@@ -523,11 +546,11 @@ startScene.addEventListener("click", ()=>{
 
     walkScene.style.display = "flex";
 
-    walkSound.volume = 0.5;
+    walkSound.volume = 0.99;
     walkSound.play();
 
     /* 멀리서 들리는 불타는 소리 */
-    fireSound.volume = 0.15;
+    fireSound.volume = 0.05;
     fireSound.play();
 
     setTimeout(()=>{
@@ -536,7 +559,7 @@ startScene.addEventListener("click", ()=>{
 
     walkSound.pause();
 
-    fireSound.volume = 0.45;
+    fireSound.volume = 0.3;
     fireSound.play();
 
         fireScene.style.opacity = "1";
@@ -867,6 +890,9 @@ const endingText = document.getElementById("endingText");
 
 function badEnding(){
 
+badMusic.volume = 0.4;
+badMusic.play();
+
 endingScene.style.display = "flex";
 
 endingText.innerHTML = `
@@ -910,6 +936,9 @@ endingText.innerHTML = `
 }
 
 function goodEnding(){
+
+goodMusic.volume = 0.4;
+goodMusic.play();
 
 endingScene.style.display = "flex";
 
