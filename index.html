@@ -332,18 +332,18 @@ body{
 
 #endingText{
 
-    width:98vw;
-    height:96vh;
+    width:78vw;
+    height:82vh;
 
     background:#111;
 
     border-radius:25px;
 
-    padding:20px 35px;
+    padding:25px 35px;
 
     color:white;
 
-    overflow:hidden;
+    overflow:auto;
 
     display:flex;
     flex-direction:column;
@@ -356,7 +356,7 @@ body{
 
 .endingImage{
     width:100%;
-    height:240px;
+    height:180px;
 
     object-fit:cover;
 
@@ -391,6 +391,89 @@ body{
     grid-template-columns:1fr 1fr;
 
     gap:10px 40px;
+}
+
+/* =========================
+CSS 맨 아래 추가
+========================= */
+
+#thoughtBox{
+    position:fixed;
+    top:20px;
+    right:20px;
+
+    background:rgba(0,0,0,0.92);
+
+    color:white;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    z-index:99999;
+
+    width:340px;
+
+    font-size:18px;
+
+    line-height:1.5;
+
+    display:none;
+
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+.askBtn{
+
+    margin-top:15px;
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#ff8a00;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:16px;
+}
+
+.suspicious,
+.safe{
+
+    color:#ff8a00;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    border-bottom:2px dotted #ff8a00;
+
+}
+
+.smallEndingBtn{
+
+    padding:10px 18px;
+
+    font-size:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#ff8a00;
+
+    color:white;
+
+    cursor:pointer;
+
+    margin-right:10px;
+
+    margin-top:15px;
 }
 
 </style>
@@ -503,6 +586,8 @@ body{
 기존 <script> ~ </script> 전체를 이걸로 바꿔
 ========================= -->
 
+<div id="thoughtBox"></div>
+
 <script>
 
 const fireSound = document.getElementById("fireSound");
@@ -546,6 +631,7 @@ const detailContent = document.getElementById("detailContent");
 
 const endingScene = document.getElementById("endingScene");
 const endingText = document.getElementById("endingText");
+
 
 darkOverlay.style.display = "none";
 
@@ -773,9 +859,17 @@ detailScene.style.display = "none";
 계약서
 ========================= */
 
+/* =========================
+showContract 함수 전체 교체
+========================= */
+
 function showContract(type){
 
 signed = false;
+
+/* =========================
+사기 매물
+========================= */
 
 if(type === 1){
 
@@ -787,47 +881,152 @@ detailContent.innerHTML = `
 
 <div class="contractPaper">
 
-<p>임대인 성명 : 김○○</p>
+<p>
+<span class="term"
+data-tip="집을 빌려주는 사람">
+임대인
+</span>
+성명 : 김○○
+</p>
 
-<p>임차인 성명 : 민지</p>
+<p>
 
-<p>소재지 : 서울특별시 ○○구 ○○로</p>
+<span class="suspicious"
 
-<p>계약 형태 : 전세</p>
+data-thought="집주인이 직접 오는 게 아닌 건가...?"
+
+data-answer="아~ 집주인 대신 대리인이 진행하는 거예요."
+
+>
+
+대리인 계약 진행
+
+</span>
+
+</p>
 
 <p>
 <span class="term"
-data-tip="세입자가 맡기는 큰 금액">
-보증금
+data-tip="집을 빌리는 사람">
+임차인
 </span>
-: 5,000,000원
+성명 : 민지
+</p>
+
+<p>소재지 : 서울특별시 ○○구 ○○로</p>
+
+<p>
+계약 형태 :
+<span class="term"
+data-tip="큰 보증금을 맡기고 월세 없이 사는 방식">
+전세
+</span>
+</p>
+
+<p>
+
+<span class="suspicious"
+
+data-thought="보증금이 주변 시세보다 너무 저렴한데...?"
+
+data-answer="집주인이 급하게 내놓은 거라 괜찮아요~"
+
+>
+
+보증금 : 5,000,000원
+
+</span>
+
 </p>
 
 <p>계약 기간 : 2026.05 ~ 2028.05</p>
 
 <p>
+
+<span class="suspicious"
+
+data-thought="근저당이 좀 많은 것 같은데 괜찮은 건가...?"
+
+data-answer="원래 대출은 조금씩 다 있어요~"
+
+>
+
 <span class="term"
-data-tip="건물에 잡혀있는 대출 기록">
-근저당
+data-tip="집을 담보로 잡고 받은 대출이 있다는 뜻">
+근저당 설정 있음
 </span>
-설정 있음
+
+</span>
+
 </p>
 
 <p>
+
+<span class="suspicious"
+
+data-thought="등기부등본을 아직 확인 안 한 건가...?"
+
+data-answer="계약 끝나고 확인해도 늦지 않아요."
+
+>
+
 <span class="term"
-data-tip="건물 소유자와 대출 여부 확인 서류">
-등기부등본
+data-tip="집 주인과 대출 여부를 확인하는 공식 서류">
+등기부등본 추후 확인 예정
 </span>
-추후 확인 예정
+
+</span>
+
 </p>
 
-<p>계약 당일 전액 입금 요청</p>
+<p>
 
-<p>임대인 연락처 추후 제공 예정</p>
+<span class="suspicious"
+
+data-thought="잔금을 먼저 전부 보내라고...?"
+
+data-answer="원래 다 이렇게 진행해요."
+
+>
+
+계약 당일 전액 입금 요청
+
+</span>
+
+</p>
 
 <p>
+
+<span class="suspicious"
+
+data-thought="세금 체납 여부를 안 적어놨네...?"
+
+data-answer="그런 건 신경 안 쓰셔도 됩니다~"
+
+>
+
+임대인 국세 납부 여부 미확인
+
+</span>
+
+</p>
+
+<p>
+
+<span class="suspicious"
+
+data-thought="이 특약사항은 조금 위험한 문장 같은데...?"
+
+data-answer="그냥 형식적인 문구예요."
+
+>
+
 특약사항 :
-계약 이후 발생하는 문제에 대해 임대인은 책임지지 않는다.
+계약 이후 발생하는 문제에 대해
+임대인은 책임지지 않는다.
+
+</span>
+
 </p>
 
 <br><br>
@@ -835,11 +1034,15 @@ data-tip="건물 소유자와 대출 여부 확인 서류">
 <p>임대인 서명 : 김○○ (인)</p>
 
 <p>
+
 임차인 서명 :
+
 <span class="fakeSign"
 onclick="signContract(this)">
 (인)
 </span>
+
+
 </p>
 
 </div>
@@ -858,6 +1061,11 @@ onclick="closeDetail()">
 </div>
 
 `;
+attachThoughtEvents();
+
+/* =========================
+안전 매물
+========================= */
 
 }else{
 
@@ -869,20 +1077,50 @@ detailContent.innerHTML = `
 
 <div class="contractPaper">
 
-<p>임대인 성명 : 박○○</p>
-
-<p>임차인 성명 : 민지</p>
-
-<p>소재지 : 서울특별시 ○○구 ○○동</p>
-
-<p>계약 형태 : 월세</p>
+<p>
+<span class="term"
+data-tip="집을 빌려주는 사람">
+임대인
+</span>
+성명 : 박○○
+</p>
 
 <p>
 <span class="term"
-data-tip="세입자가 맡기는 큰 금액">
-보증금
+data-tip="집을 빌리는 사람">
+임차인
 </span>
-: 10,000,000원
+성명 : 민지
+</p>
+
+<p>소재지 : 서울특별시 ○○구 ○○동</p>
+
+<p>
+계약 형태 :
+<span class="term"
+data-tip="매달 돈을 내고 사는 방식">
+월세
+</span>
+</p>
+
+<p>
+
+<span class="safe"
+
+data-thought="보증금이 주변 시세랑 비슷한 것 같은데...?"
+
+data-answer="주변 시세 기준으로 설정된 금액입니다."
+
+>
+
+<span class="term"
+data-tip="집 계약을 위해 맡기는 돈">
+보증금 : 10,000,000원
+</span>
+
+</span>
+
+
 </p>
 
 <p>월세 : 450,000원</p>
@@ -892,25 +1130,62 @@ data-tip="세입자가 맡기는 큰 금액">
 <p>계약 기간 : 2026.05 ~ 2028.05</p>
 
 <p>
+
+<span class="safe"
+
+data-thought="전입신고가 가능하구나."
+
+data-answer="계약 후 바로 전입신고 가능합니다."
+
+>
+
 <span class="term"
-data-tip="세입자가 실제 거주한다고 신고하는 절차">
-전입신고
+data-tip="이 집에 실제 거주한다고 등록하는 절차">
+전입신고 가능
 </span>
-가능
+
+</span>
+
 </p>
 
 <p>
+
+<span class="safe"
+
+data-thought="확정일자도 받을 수 있네."
+
+data-answer="주민센터에서 바로 받을 수 있어요."
+
+>
+
 <span class="term"
-data-tip="보증금을 우선적으로 돌려받을 권리">
-확정일자
+data-tip="보증금을 우선적으로 보호받기 위한 날짜 인증">
+확정일자 가능
 </span>
-가능
+
+</span>
+
 </p>
 
 <p>
-특약사항 :
+
+<span class="safe"
+
+data-thought="특약사항도 자세히 적혀 있네."
+
+data-answer="계약 종료 후 보증금 반환 조항까지 포함되어 있습니다."
+
+>
+
+<span class="term"
+data-tip="계약에서 추가로 정하는 특별한 약속">
+특약사항
+</span> :
 도배 및 장판 상태 확인 완료.
 계약 종료 후 보증금 반환 조항 명시.
+
+</span>
+
 </p>
 
 <br><br>
@@ -918,11 +1193,14 @@ data-tip="보증금을 우선적으로 돌려받을 권리">
 <p>임대인 서명 : 박○○ (인)</p>
 
 <p>
+
 임차인 서명 :
+
 <span class="fakeSign"
 onclick="signContract(this)">
 (인)
 </span>
+
 </p>
 
 </div>
@@ -941,6 +1219,8 @@ onclick="closeDetail()">
 </div>
 
 `;
+
+attachThoughtEvents();
 
 }
 
@@ -1033,6 +1313,23 @@ endingText.innerHTML = `
 
 </div>
 
+<br><br>
+
+<div style="margin-top:15px;">
+
+<button class="smallEndingBtn"
+onclick="window.open('https://www.youtube.com/watch?v=AoByTL6TC90&t=51s')">
+전세 계약 전
+</button>
+
+<button class="smallEndingBtn"
+onclick="window.open('https://youtu.be/ZhprqRnv4v0?si=Rq-2XCRSppAXfv5M')">
+전세 계약 시
+</button>
+
+</div>
+
+
 `;
 
 }
@@ -1069,7 +1366,9 @@ class="endingImage">
 
 “이제 진짜 어른이 되어가는 것 같아.”
 
-</div>
+<br><br>
+
+<div style="margin-top:15px;">
 
 <hr style="margin:12px 0;">
 
@@ -1084,11 +1383,78 @@ class="endingImage">
 
 </div>
 
+<button class="smallEndingBtn"
+onclick="window.open('https://www.youtube.com/watch?v=AoByTL6TC90&t=51s')">
+전세 계약 전
+</button>
+
+<button class="smallEndingBtn"
+onclick="window.open('https://youtu.be/ZhprqRnv4v0?si=Rq-2XCRSppAXfv5M')">
+전세 계약 시
+</button>
+
+</div>
+
+
+
 `;
+
+}
+
+const thoughtBox = document.getElementById("thoughtBox");
+
+function attachThoughtEvents(){
+
+    const targets = document.querySelectorAll(".suspicious, .safe");
+
+    targets.forEach(target => {
+
+        target.addEventListener("click", ()=>{
+
+            thoughtBox.style.display = "block";
+
+            thoughtBox.innerHTML = `
+
+            <div style="margin-bottom:12px; line-height:1.6;">
+            ${target.dataset.thought}
+            </div>
+
+            <button class="askBtn"
+            onclick="askQuestion('${target.dataset.answer}')">
+            물어보기
+            </button>
+
+            `;
+
+        });
+
+
+
+    });
+
+}
+
+
+function askQuestion(text){
+
+    thoughtBox.innerHTML = `
+
+    <div style="line-height:1.6;">
+    "${text}"
+    </div>
+
+    <button class="askBtn"
+    onclick="thoughtBox.style.display='none'">
+    닫기
+    </button>
+
+    `;
 
 }
 
 </script>
 
+    
+</div>
 </body>
 </html>
